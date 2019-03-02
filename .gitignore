@@ -1,1 +1,8 @@
 *.pro.user
+.qmake.stash
+Makefile
+Makefile.*
+beer_sim.exe
+beer_sim_plugin_import.cpp
+release/
+ui_*.h
