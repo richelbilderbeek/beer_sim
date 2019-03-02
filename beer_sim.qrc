@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>girl.png</file>
+        <file>beer.png</file>
+        <file>beer_no_foam.png</file>
+        <file>beer_with_foam.png</file>
     </qresource>
 </RCC>

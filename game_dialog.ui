@@ -31,7 +31,7 @@
   <property name="windowTitle">
    <string>Beer Simulator</string>
   </property>
-  <widget class="QLabel" name="label">
+  <widget class="QLabel" name="label_girl">
    <property name="geometry">
     <rect>
      <x>9</x>
@@ -45,6 +45,41 @@
    </property>
    <property name="pixmap">
     <pixmap resource="beer_sim.qrc">:/girl.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_beer">
+   <property name="geometry">
+    <rect>
+     <x>578</x>
+     <y>241</y>
+     <width>61</width>
+     <height>121</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="beer_sim.qrc">:/beer_with_foam.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_text">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>30</y>
+     <width>301</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>28</pointsize>
+     <italic>false</italic>
+    </font>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;I like my beer &lt;/p&gt;&lt;p&gt;with foam!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
  </widget>
