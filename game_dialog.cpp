@@ -14,14 +14,14 @@ game_dialog::~game_dialog()
   delete ui;
 }
 
-void game_dialog::mousePressEvent(QMouseEvent *event)
+void game_dialog::mousePressEvent(QMouseEvent *)
 {
   m_beer_state = beer_state::foam;
   ui->label_beer->setPixmap(QPixmap(":/beer_with_foam.png"));
   ui->label_text->setText("Yummie!\nBeer with foam!");
 }
 
-void game_dialog::timerEvent(QTimerEvent *event)
+void game_dialog::timerEvent(QTimerEvent *)
 {
   if (m_beer_state == beer_state::foam)
   {
