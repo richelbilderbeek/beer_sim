@@ -1,4 +1,4 @@
-# beer_sim
+# Beer Sim
 
 Beer simulator game
 
@@ -6,3 +6,7 @@ Beer simulator game
 
  * Videos: [YouTube](https://youtu.be/-GcckR59XuQ) [(.ogv)](http://richelbilderbeek.nl/beer_sim.ogv)
  * [Download the Windows executable](http://richelbilderbeek.nl/beer_sim.exe)
+
+## Links
+
+ * [Sim Equation](https://github.com/richelbilderbeek/sim_equation): similar equally important simulation
