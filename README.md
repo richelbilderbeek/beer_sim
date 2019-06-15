@@ -1,5 +1,9 @@
 # Beer Sim
 
+Branch|[![Travis CI logo](pics/TravisCI.png)](https://travis-ci.org)
+---|---
+`master`|[![Build Status](https://travis-ci.org/richelbilderbeek/beer_sim.svg?branch=master)](https://travis-ci.org/richelbilderbeek/beer_sim)
+
 Beer simulator game
 
 ![beer_sim.png](beer_sim.png)
