@@ -1,13 +1,49 @@
-language: generic
+language: cpp
 dist: bionic
+compiler: gcc
+cache: packages
 
-install:
+install: 
+  - sudo apt update -qq
+  # Boost
+  - sudo apt install -qq libboost-all-dev
+  # Qt
+  - sudo apt install -qq qt5-qmake qt5-default
+  # cppcheck
+  - sudo apt install -qq cppcheck 
+  # sloccount
+  - sudo apt install -qq sloccount 
+  # Codecov
+  - sudo pip install codecov
   # Check dead links
-  - sudo apt-get install -qq npm
-  - npm config set strict-ssl false
-  - sudo npm install -g markdown-link-check
+  #- sudo apt-get install -qq npm
+  #- npm config set strict-ssl false
+  #- sudo npm install -g markdown-link-check
+  # OCLint
+  - ./scripts/install_oclint.sh
 
-script:
+services:
+ - xvfb
+
+script: 
+  - qmake -qt=qt5 beer_sim.pro
+  - make --silent
+  - ./beer_sim &
+  - sleep 10
+  - sudo killall -9 beer_sim
+  # cppcheck, be mild
+  - cppcheck --quiet --error-exitcode=0 . 
+  #- cppcheck --quiet --error-exitcode=1 . 
+  # Call OCLint
+  - ./scripts/do_oclint.sh
+  # Get code coverage
+  - ./scripts/get_code_cov.sh >/dev/null
+  - codecov >/dev/null
   # Check dead links
-  - rm .travis.yml
-  - ./scripts/check_dead_links
+  #- rm .travis.yml
+  #- ./scripts/check_dead_links || true
+  # SLOCcount
+  - cd ..; sloccount --overhead 1 --personcost 22614 $my_github; cd $my_github
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
