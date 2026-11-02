@@ -9,4 +9,4 @@ Beer simulator game
 
 ## Links
 
-* [Sim Equation](https://github.com/richelbilderbeek/sim_equation): similar equally important simulation
+- [Sim Equation](https://github.com/richelbilderbeek/sim_equation): similar equally important simulation
