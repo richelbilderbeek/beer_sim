@@ -40,6 +40,11 @@ jobs:
         with:
           name: beer_sim_wasm
           path: docs/game
+      - uses: actions/download-artifact@v4
+        with:
+          name: beer_sim_windows
+          path: beer_sim_windows
+      - run: zip -r docs/beer_sim_windows.zip beer_sim_windows
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x

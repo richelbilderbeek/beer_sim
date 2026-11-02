@@ -12,5 +12,6 @@ release/
 ui_*.h
 
 # Generated when building the website
+/docs/beer_sim_windows.zip
 /docs/game/
 /site/

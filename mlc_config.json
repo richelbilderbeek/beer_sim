@@ -2,6 +2,9 @@
   "aliveStatusCodes": [200, 403, 418, 500, 503],
   "ignorePatterns": [
     {
+      "pattern": "^https://richelbilderbeek.github.io/beer_sim/beer_sim_windows.zip$"
+    },
+    {
       "pattern": "github/workspace/docs/software/overview$"
     },
     {
