@@ -42,7 +42,7 @@ def expected_beer(background, filename):
 def main():
     url = sys.argv[1]
     girl = Image.open("girl.png").convert("RGBA")
-    background = Image.new("RGBA", (824, 818), (0, 0, 0, 255))
+    background = Image.new("RGBA", (824, 818), (239, 239, 239, 255))
     background.alpha_composite(girl, GIRL_POS)
     with_foam, box = expected_beer(background, "beer_with_foam.png")
     no_foam, _ = expected_beer(background, "beer_no_foam.png")
@@ -79,13 +79,23 @@ def main():
         assert girl_diff <= MAX_DIFF, "Game not shown at the expected spot"
         assert not errors, errors
 
+        # The foam may already be gone by now
+        foam_diff, no_foam_diff = beer_state()
+        print(f"Start: {foam_diff:.1f} from foam, {no_foam_diff:.1f} from none")
+        assert min(foam_diff, no_foam_diff) <= MAX_DIFF, "Beer not recognized"
+
+        print("Clicking to get foam")
+        frame.click(position={"x": 100, "y": 100})
+        time.sleep(1)
+        foam_diff, _ = beer_state()
+        assert foam_diff <= MAX_DIFF, f"Click gave no foam: {foam_diff:.1f}"
+
         print("Waiting for the foam to disappear")
         deadline = time.time() + FOAM_TIMEOUT_SECS
-        foam_diff, no_foam_diff = beer_state()
-        assert foam_diff <= MAX_DIFF, f"No foam at start: {foam_diff:.1f}"
+        no_foam_diff = 255.0
         while time.time() < deadline and no_foam_diff > MAX_DIFF:
             time.sleep(1)
-            foam_diff, no_foam_diff = beer_state()
+            _, no_foam_diff = beer_state()
         assert no_foam_diff <= MAX_DIFF, f"Foam stayed: {no_foam_diff:.1f}"
 
         print("Clicking to get foam again")
