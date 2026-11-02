@@ -5,7 +5,8 @@ repo_url = "https://github.com/richelbilderbeek/beer_sim"
 edit_uri = "blob/main/docs/"
 
 nav = [
-  { "Start" = "README.md"}
+  { "Start" = "README.md"},
+  "play.md"
 ]
 
 [project.theme]
