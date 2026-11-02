@@ -1,8 +1,8 @@
-# Build the desktop and WebAssembly versions of the game
+# Build the Linux, Windows and WebAssembly versions of the game
 #
-# Both versions are uploaded as artifacts of this workflow.
+# All versions are uploaded as artifacts of this workflow.
 # This workflow is also called by create_zensical_website.yaml,
-# which puts the WebAssembly version on the website.
+# which puts the WebAssembly and Windows versions on the website.
 name: Build game
 
 on:
@@ -40,6 +40,47 @@ jobs:
         with:
           name: beer_sim_desktop
           path: beer_sim
+          if-no-files-found: error
+
+  build_windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          arch: win64_msvc2022_64
+          cache: true
+
+      - uses: ilammy/msvc-dev-cmd@v1
+
+      - run: qmake beer_sim.pro
+      - run: nmake /nologo
+
+      - name: Collect the files needed to run the game
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory beer_sim_windows
+          Copy-Item release/beer_sim.exe beer_sim_windows/
+          windeployqt --release --no-translations --no-system-d3d-compiler --no-opengl-sw beer_sim_windows/beer_sim.exe
+          Get-ChildItem "$env:VCToolsRedistDir/x64/Microsoft.VC*.CRT/*.dll" | Copy-Item -Destination beer_sim_windows/
+
+      - name: The game must start and keep running without Qt being installed
+        shell: pwsh
+        run: |
+          $env:PATH = "C:\Windows\System32;C:\Windows"
+          Remove-Item Env:QT_PLUGIN_PATH, Env:QML2_IMPORT_PATH -ErrorAction Ignore
+          $game = Start-Process -PassThru -FilePath beer_sim_windows/beer_sim.exe
+          Start-Sleep -Seconds 5
+          if ($game.HasExited) { exit 1 }
+          Stop-Process -Id $game.Id
+          Get-ChildItem beer_sim_windows -Name
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: beer_sim_windows
+          path: beer_sim_windows
           if-no-files-found: error
 
   build_wasm:

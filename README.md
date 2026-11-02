@@ -14,7 +14,7 @@ make
 To build the WebAssembly version, do the same with the `qmake` of
 Qt for WebAssembly and the matching version of Emscripten.
 [build_game.yaml](.github/workflows/build_game.yaml)
-shows which versions are used and builds both versions.
+shows which versions are used and builds the Linux, Windows and WebAssembly versions.
 
 ## Files used by continuous integration scripts
 
