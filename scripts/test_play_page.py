@@ -19,7 +19,7 @@ BEER_LABEL = (578, 241, 61, 121)  # x, y, width, height, see game_dialog.ui
 START_TIMEOUT_SECS = 60
 # The foam disappears with a chance of 1 in 10 per second
 FOAM_TIMEOUT_SECS = 120
-MAX_DIFF = 12  # Average difference per color channel, from 0 to 255
+MAX_DIFF = 6  # Average difference per color channel, from 0 to 255
 MAX_OFFSET = 2  # Pixels, as a screenshot of an element can be a bit bigger
 
 
@@ -98,24 +98,25 @@ def main():
         assert min(foam_diff, no_foam_diff) <= MAX_DIFF, "Beer not recognized"
 
         print("Clicking to get foam")
+        # Foam and no foam differ too little for a fixed limit:
+        # the state of the beer is the image it resembles most
         frame.click(position={"x": 100, "y": 100})
         time.sleep(1)
-        foam_diff, _ = beer_state()
-        assert foam_diff <= MAX_DIFF, f"Click gave no foam: {foam_diff:.1f}"
+        foam_diff, no_foam_diff = beer_state()
+        assert foam_diff < no_foam_diff, "Click gave no foam"
 
         print("Waiting for the foam to disappear")
         deadline = time.time() + FOAM_TIMEOUT_SECS
-        no_foam_diff = 255.0
-        while time.time() < deadline and no_foam_diff > MAX_DIFF:
+        while time.time() < deadline and no_foam_diff > foam_diff:
             time.sleep(1)
-            _, no_foam_diff = beer_state()
-        assert no_foam_diff <= MAX_DIFF, f"Foam stayed: {no_foam_diff:.1f}"
+            foam_diff, no_foam_diff = beer_state()
+        assert no_foam_diff < foam_diff, "Foam stayed"
 
         print("Clicking to get foam again")
         frame.click(position={"x": 100, "y": 100})
         time.sleep(1)
-        foam_diff, _ = beer_state()
-        assert foam_diff <= MAX_DIFF, f"Click gave no foam: {foam_diff:.1f}"
+        foam_diff, no_foam_diff = beer_state()
+        assert foam_diff < no_foam_diff, "Click gave no foam"
         assert not errors, errors
         browser.close()
     print("OK: the game can be played")
