@@ -28,6 +28,18 @@ def diff(image_a, image_b):
     return sum(stat.mean) / len(stat.mean)
 
 
+def find_offset(shot, expected, box):
+    """Find where in a screenshot the expected image fits best."""
+    best = (255.0, 0, 0)
+    for delta_y in range(-40, 41):
+        for delta_x in range(-40, 41):
+            moved = (box[0] + delta_x, box[1] + delta_y,
+                     box[2] + delta_x, box[3] + delta_y)
+            best = min(best, (diff(shot.crop(moved), expected),
+                              delta_x, delta_y))
+    return best
+
+
 def expected_beer(background, filename):
     """What the part of the game with the beer should look like."""
     beer = Image.open(filename).convert("RGBA")
@@ -82,6 +94,10 @@ def main():
         # The foam may already be gone by now
         foam_diff, no_foam_diff = beer_state()
         print(f"Start: {foam_diff:.1f} from foam, {no_foam_diff:.1f} from none")
+        shot = screenshot()
+        print(f"Best fit, foam: {find_offset(shot, with_foam, box)}")
+        print(f"Best fit, none: {find_offset(shot, no_foam, box)}")
+        print(f"Screenshot size: {shot.size}")
         assert min(foam_diff, no_foam_diff) <= MAX_DIFF, "Beer not recognized"
 
         print("Clicking to get foam")
