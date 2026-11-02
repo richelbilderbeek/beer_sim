@@ -2,7 +2,15 @@
 .qmake.stash
 Makefile
 Makefile.*
+/beer_sim
 beer_sim.exe
 beer_sim_plugin_import.cpp
+moc_*
+qrc_*
+*.o
 release/
 ui_*.h
+
+# Generated when building the website
+/docs/game/
+/site/

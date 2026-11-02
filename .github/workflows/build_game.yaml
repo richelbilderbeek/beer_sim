@@ -1,0 +1,99 @@
+# Build the desktop and WebAssembly versions of the game
+#
+# Both versions are uploaded as artifacts of this workflow.
+# This workflow is also called by create_zensical_website.yaml,
+# which puts the WebAssembly version on the website.
+name: Build game
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+
+env:
+  # A version of Qt only works with one version of Emscripten, see
+  # https://doc.qt.io/qt-6/wasm.html#installing-emscripten
+  QT_VERSION: 6.8.3
+  EMSCRIPTEN_VERSION: 3.1.56
+
+jobs:
+  build_desktop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          cache: true
+
+      - run: qmake beer_sim.pro
+      - run: make --silent
+
+      - name: The game must start and keep running
+        run: |
+          status=0
+          QT_QPA_PLATFORM=offscreen timeout 5 ./beer_sim || status=$?
+          test "${status}" -eq 124
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: beer_sim_desktop
+          path: beer_sim
+          if-no-files-found: error
+
+  build_wasm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          host: all_os
+          target: wasm
+          arch: wasm_singlethread
+          cache: true
+
+      - uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: ${{ env.EMSCRIPTEN_VERSION }}
+
+      - run: qmake beer_sim.pro
+      - run: make --silent
+
+      - name: Collect the files needed to run the game
+        run: |
+          mkdir wasm
+          cp beer_sim.html beer_sim.js beer_sim.wasm qtloader.js qtlogo.svg wasm/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: beer_sim_wasm
+          path: wasm
+          if-no-files-found: error
+
+  test_play_page:
+    needs: build_wasm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: beer_sim_wasm
+          path: docs/game
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      - run: pip install pillow playwright zensical
+      - run: playwright install --with-deps chromium
+      - run: zensical build --clean --strict
+
+      - name: Play the game on the website
+        run: |
+          python -m http.server 8000 --directory site &
+          sleep 1
+          python scripts/test_play_page.py http://localhost:8000/play/
