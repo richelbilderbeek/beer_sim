@@ -72,3 +72,28 @@ jobs:
           name: beer_sim_wasm
           path: wasm
           if-no-files-found: error
+
+  test_play_page:
+    needs: build_wasm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: beer_sim_wasm
+          path: docs/game
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      - run: pip install pillow playwright zensical
+      - run: playwright install --with-deps chromium
+      - run: zensical build --clean --strict
+
+      - name: Play the game on the website
+        run: |
+          python -m http.server 8000 --directory site &
+          sleep 1
+          python scripts/test_play_page.py http://localhost:8000/play/
