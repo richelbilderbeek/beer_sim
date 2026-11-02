@@ -1,17 +1,13 @@
 # Beer Sim
 
-Branch |[![Travis CI logo](pics/TravisCI.png)](https://travis-ci.org)                                                                                                 |[![Codecov logo](pics/Codecov.png)](https://www.codecov.io)
--------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-master |[![Build Status](https://travis-ci.org/richelbilderbeek/beer_sim.svg?branch=master)](https://travis-ci.org/richelbilderbeek/beer_sim) |[![codecov.io](https://codecov.io/github/richelbilderbeek/beer_sim/coverage.svg?branch=master)](https://codecov.io/github/richelbilderbeek/beer_sim/branch/master)
-develop|[![Build Status](https://travis-ci.org/richelbilderbeek/beer_sim.svg?branch=develop)](https://travis-ci.org/richelbilderbeek/beer_sim)|[![codecov.io](https://codecov.io/github/richelbilderbeek/beer_sim/coverage.svg?branch=develop)](https://codecov.io/github/richelbilderbeek/beer_sim/branch/develop)
+[Go to the nicely rendered website](https://richelbilderbeek.github.io/beer_sim/).
 
-Beer simulator game
+## Files used by continuous integration scripts
 
-![beer_sim.png](beer_sim.png)
-
- * Videos: [YouTube](https://youtu.be/-GcckR59XuQ) [(.ogv)](http://richelbilderbeek.nl/beer_sim.ogv)
- * [Download the Windows executable](http://richelbilderbeek.nl/beer_sim.exe)
-
-## Links
-
- * [Sim Equation](https://github.com/richelbilderbeek/sim_equation): similar equally important simulation
+Filename                                  |Descriptions
+------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------
+[mlc_config.json](mlc_config.json)        |Configuration of the link checker, use `markdown-link-check --config mlc_config.json --quiet docs/**/*.md` to do link checking locally
+[.spellcheck.yml](.spellcheck.yml)        |Configuration of the spell checker, use `pyspelling -c .spellcheck.yml` to do spellcheck locally
+[.wordlist.txt](.wordlist.txt)            |Whitelisted words for the spell checker, use `pyspelling -c .spellcheck.yml` to do spellcheck locally
+[.markdownlint.jsonc](.markdownlint.jsonc)|Configuration of the markdown linter, use `markdownlint "**/*.md"` to do markdown linting locally. The name of this file is a default name.
+[.markdownlintignore](.markdownlintignore)|Files ignored by the markdown linter, use `markdownlint "**/*.md"` to do markdown linting locally. The name of this file is a default name.
