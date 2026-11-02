@@ -20,6 +20,7 @@ START_TIMEOUT_SECS = 60
 # The foam disappears with a chance of 1 in 10 per second
 FOAM_TIMEOUT_SECS = 120
 MAX_DIFF = 12  # Average difference per color channel, from 0 to 255
+MAX_OFFSET = 2  # Pixels, as a screenshot of an element can be a bit bigger
 
 
 def diff(image_a, image_b):
@@ -31,8 +32,8 @@ def diff(image_a, image_b):
 def find_offset(shot, expected, box):
     """Find where in a screenshot the expected image fits best."""
     best = (255.0, 0, 0)
-    for delta_y in range(-40, 41):
-        for delta_x in range(-40, 41):
+    for delta_y in range(-MAX_OFFSET, MAX_OFFSET + 1):
+        for delta_x in range(-MAX_OFFSET, MAX_OFFSET + 1):
             moved = (box[0] + delta_x, box[1] + delta_y,
                      box[2] + delta_x, box[3] + delta_y)
             best = min(best, (diff(shot.crop(moved), expected),
@@ -77,8 +78,8 @@ def main():
 
         def beer_state():
             shot = screenshot()
-            crop = shot.crop(box)
-            return diff(crop, with_foam), diff(crop, no_foam)
+            return (find_offset(shot, with_foam, box)[0],
+                    find_offset(shot, no_foam, box)[0])
 
         print("Waiting for the game to show up")
         deadline = time.time() + START_TIMEOUT_SECS
@@ -94,10 +95,6 @@ def main():
         # The foam may already be gone by now
         foam_diff, no_foam_diff = beer_state()
         print(f"Start: {foam_diff:.1f} from foam, {no_foam_diff:.1f} from none")
-        shot = screenshot()
-        print(f"Best fit, foam: {find_offset(shot, with_foam, box)}")
-        print(f"Best fit, none: {find_offset(shot, no_foam, box)}")
-        print(f"Screenshot size: {shot.size}")
         assert min(foam_diff, no_foam_diff) <= MAX_DIFF, "Beer not recognized"
 
         print("Clicking to get foam")
