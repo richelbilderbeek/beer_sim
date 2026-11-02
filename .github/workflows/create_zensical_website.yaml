@@ -7,7 +7,14 @@ on:
     branches:
       - main
     paths:
+      - .github/workflows/build_game.yaml
       - .github/workflows/create_zensical_website.yaml
+      - '*.cpp'
+      - '*.h'
+      - '*.png'
+      - '*.pro'
+      - '*.qrc'
+      - '*.ui'
       - 'docs/**'
       - zensical.toml
 
@@ -17,7 +24,11 @@ permissions:
   id-token: write
 
 jobs:
+  build_game:
+    uses: ./.github/workflows/build_game.yaml
+
   create_zensical_website:
+    needs: build_game
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -25,6 +36,10 @@ jobs:
     steps:
       - uses: actions/configure-pages@v5
       - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          name: beer_sim_wasm
+          path: docs/game
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x

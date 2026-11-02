@@ -70,3 +70,6 @@ Tetralith
 matplotlib
 seaborn
 NAISS
+Emscripten
+Qt
+WebAssembly
