@@ -64,7 +64,7 @@ jobs:
           New-Item -ItemType Directory beer_sim_windows
           Copy-Item release/beer_sim.exe beer_sim_windows/
           windeployqt --release --no-translations --no-system-d3d-compiler --no-opengl-sw beer_sim_windows/beer_sim.exe
-          Copy-Item "$env:VCToolsRedistDir/x64/Microsoft.VC143.CRT/*.dll" beer_sim_windows/
+          Get-ChildItem "$env:VCToolsRedistDir/x64/Microsoft.VC*.CRT/*.dll" | Copy-Item -Destination beer_sim_windows/
 
       - name: The game must start and keep running without Qt being installed
         shell: pwsh
@@ -75,6 +75,7 @@ jobs:
           Start-Sleep -Seconds 5
           if ($game.HasExited) { exit 1 }
           Stop-Process -Id $game.Id
+          Get-ChildItem beer_sim_windows -Name
 
       - uses: actions/upload-artifact@v4
         with:
