@@ -1,5 +1,7 @@
 # Beer Sim
 
+[![codecov](https://codecov.io/gh/richelbilderbeek/beer_sim/branch/main/graph/badge.svg)](https://codecov.io/gh/richelbilderbeek/beer_sim)
+
 [Go to the nicely rendered website](https://richelbilderbeek.github.io/beer_sim/).
 
 ## Build
