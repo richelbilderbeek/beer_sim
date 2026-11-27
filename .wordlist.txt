@@ -46,6 +46,7 @@ UU
 Uppsala
 WebAssembly
 Yadav
+Zensical
 codecov
 config
 dropin
